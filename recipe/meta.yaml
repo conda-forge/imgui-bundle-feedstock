@@ -7,24 +7,107 @@ package:
 source:
   # url: https://github.com/pthom/imgui_bundle/archive/refs/tags/v{{ version }}.tar.gz
   # sha256: ffae861ff9fd47c95cc56807f028d5fe78a700f92a2a43c43f31ea2358542a68
-  git_url: https://github.com/pthom/imgui_bundle.git
-  git_tag: v{{ version }}
-  patches:
-    - 0001-Do-not-force-GLFW-to-be-recompiled.patch
-    - 0002-Do-not-force-static-freetype.patch
-    # https://github.com/pthom/imgui_bundle/pull/284
-    - 0003-Do-not-force-linking-to-non-existent-nlohmann_json-s.patch
-    - 0005-Find-glfw-correctly-for-conda-forge.patch
-    - 0006-Enable-shared-libraries-for-conda-forge.patch
-    - 0007-Remove-optional-dependencies-to-slim-package.patch
-    - 0008-Adjust-compilation-of-immapp.patch
-    - single_patch.patch
-    # Adapted from
-    # https://github.com/pthom/immvision/commit/733334da4ab43d9efd54ef1df0344cce39fc4625
-    - drop_float16.patch
+  # Clone what you want, then run
+  # bash make_source.sh
+  # git_url: https://github.com/pthom/imgui_bundle.git
+  # git_tag: v{{ version }}
+  - folder: bundle
+    url: https://github.com/pthom/imgui_bundle/archive/{{ version }}.tar.gz
+    sha256: 8abcb27d1eadc9a9a7f00b1e62e6c66c19d48685aaef5712b5e1b7b6c5630c71
+      # patches:
+      #   - 0001-Do-not-force-GLFW-to-be-recompiled.patch
+      #   - 0002-Do-not-force-static-freetype.patch
+      #   # https://github.com/pthom/imgui_bundle/pull/284
+      #   - 0003-Do-not-force-linking-to-non-existent-nlohmann_json-s.patch
+      #   - 0005-Find-glfw-correctly-for-conda-forge.patch
+      #   - 0006-Enable-shared-libraries-for-conda-forge.patch
+      #   - 0007-Remove-optional-dependencies-to-slim-package.patch
+      #   - 0008-Adjust-compilation-of-immapp.patch
+      #   - single_patch.patch
+      #   # Adapted from
+      #   # https://github.com/pthom/immvision/commit/733334da4ab43d9efd54ef1df0344cce39fc4625
+      #   - drop_float16.patch
+  - folder: bundle/external/external/imgui/imgui
+    url: https://github.com/pthom/imgui/archive/216066119500a2f4b46f0271c7b94ab286376500.tar.gz
+    sha256: 5f2cbbdab894d189c0ff12753ace60fd76331b3c1e9d97d64c54e36c2c582c65
+  - folder: bundle/external/external/glfw/glfw
+    url: https://github.com/glfw/glfw/archive/7482de6071d21db77a7236155da44c172a7f6c9e.tar.gz
+    sha256: b59ec233ee8435831511cda07c83a5f3f49225db390a7d30201160483d920fcb
+  - folder: bundle/external/external/hello_imgui/hello_imgui
+    url: https://github.com/pthom/hello_imgui/archive/16bb9aea3a0df3c5384520137002e987f8f561f1.tar.gz
+    sha256: f3e1df0373f3e43f2916667b8023d9dd16ee745422a7fc4ac5c9bb3656f730c6
+  - folder: bundle/external/external/hello_imgui/hello_imgui/external/imgui
+    url: https://github.com/ocornut/imgui/archive/d66f4e5890f8df2a52434aac2d14ff381663b1c1.tar.gz
+    sha256: 2ed001e3a36e0ba3c7d28e8e864a958aa4006eabf79c7e5398effcb7b7064d88
+  - folder: bundle/external/external/hello_imgui/hello_imgui/hello_imgui_cmake/ios-cmake
+    url: https://github.com/leetal/ios-cmake/archive/06465b27698424cf4a04a5ca4904d50a3c966c45.tar.gz
+    sha256: eeb1910b748839ef9242a90696c5856459a8f6aeba8a976ce2330642b206bbbe
+  - folder: bundle/external/external/hello_imgui/hello_imgui/_example_integration
+    url: https://github.com/pthom/hello_imgui_template/archive/c05bd94a015c4782c70f8a38d12b5b0b4055b964.tar.gz
+    sha256: 760dd04efa0902083299cd50ade200a36bb812a1f52dd6a2eb9e6bb9fcdd845d
+  - folder: bundle/external/external/ImFileDialog/ImFileDialog
+    url: https://github.com/pthom/ImFileDialog/archive/3c4a3243e0a77f0f6a4df708e4d22224db38a66d.tar.gz
+    sha256: 03c5e3d0dd13c1b15fcbbad485bd5eb3802ef051f90773cc96edcb45eae73a50
+  - folder: bundle/external/external/imgui-knobs/imgui-knobs
+    url: https://github.com/pthom/imgui-knobs/archive/4bcf3922f6521307ff50ba54fb892e469d7b6bcd.tar.gz
+    sha256: 091e60c56c157b860b2cd23c2f40317a17ed3c47c3dff6c8ee7c9366cd47c2d3
+  - folder: bundle/external/external/imgui-node-editor/imgui-node-editor
+    url: https://github.com/pthom/imgui-node-editor/archive/3966e21ac9d43b159e6d19493e20ab5e2e8465ec.tar.gz
+    sha256: c9154c0f0cb8e5c89db1e6f05bf8f16672a4e0c200c5bb1a9380e650e9ea0418
+  - folder: bundle/external/external/imgui_md/imgui_md
+    url: https://github.com/pthom/imgui_md/archive/3e43f4f708d57a3c54f57ba57b581285ebe56fdd.tar.gz
+    sha256: c63b1777a19c4c2edea8b5d1b23ed7162b268f81fd0c9a6379d5a984feb9f145
+  - folder: bundle/external/external/imgui_tex_inspect/imgui_tex_inspect
+    url: https://github.com/pthom/imgui_tex_inspect/archive/340197b4e6905cec8cb956fa5731bf9b3004dd75.tar.gz
+    sha256: 37cac4356c8b70444154dbb0d6dfccb786c4f4edb206ce3827e6fbce9d5b00cf
+  - folder: bundle/external/external/imgui_toggle/imgui_toggle
+    url: https://github.com/pthom/imgui_toggle/archive/9f55b60933d7ee463402f0c095aa32c2e9634eb5.tar.gz
+    sha256: 2f9111b79668e7825967a664c33bd15e348c5d81f3f034c23c5ad14b4f86965b
+  - folder: bundle/external/external/imgui_md/md4c
+    url: https://github.com/mity/md4c/archive/e9ff661ff818ee94a4a231958d9b6768dc6882c9.tar.gz
+    sha256: e152e725b211036497afce5b38ea82c8a272a87bf5d185b4bb7a1f056bd09ca9
+  - folder: bundle/external/external/ImGuiColorTextEdit/ImGuiColorTextEdit
+    url: https://github.com/pthom/ImGuiColorTextEdit/archive/bf487b20ffb2a71aea49c19cb14e8f04dbce8c25.tar.gz
+    sha256: 6e6384c4b984329cd83fa1d8dfd84c2da2f576576ceeba2b0aefd2159bc2f75f
+  - folder: bundle/external/external/ImGuizmo/ImGuizmo
+    url: https://github.com/pthom/ImGuizmo/archive/ec20ab511f4838de8ac37915593c13734b3ffdcf.tar.gz
+    sha256: 5726b444fd29ac795d84e2e8fb3a76ab62a04cff72eda5f16e4356f671e37479
+  - folder: bundle/external/external/immvision/immvision
+    url: https://github.com/pthom/immvision/archive/ec8f07e03ce8fc2df3ae0fdeec8bb230bdc3bfb8.tar.gz
+    sha256: 97665e22a3cefbc29ee04c3b0231d758e1acdb92476018313f14db43edff745a
+  - folder: bundle/external/external/immvision/cvnp
+    url: https://github.com/pthom/cvnp/archive/8ed27568be9258546c3c2cd04106a78888bf65b5.tar.gz
+    sha256: 1b9b24c97dbc32967435c1881f91b12b0d03a8d3e8de9965a387cd4c640d9647
+  - folder: bundle/external/external/implot/implot
+    url: https://github.com/pthom/implot/archive/0925a88c04a93018e192f51242e7b6304a481f6d.tar.gz
+    sha256: d3c8834fc5a50ab393299821844e5f32f0a74e0dec46108d40a48ea7f0c091fa
+  - folder: bundle/external/external/imgui-command-palette/imgui-command-palette
+    url: https://github.com/pthom/imgui-command-palette/archive/66124ae045c11eb153c9c3f184b1e12f4d5a0e7b.tar.gz
+    sha256: d0688dc5b7f2f247ffd8e02f9c124dc821671500f68b758754513d6a0c899630
+  - folder: bundle/external/external/imgui_test_engine/imgui_test_engine
+    url: https://github.com/pthom/imgui_test_engine/archive/4d45290c1ec53d1bd12a8b7555a5c4dd6cd69749.tar.gz
+    sha256: 0fc73c74553e7ad956651c906b87e6292a32928e9b51e16d88e7237bb7356c90
+  - folder: bundle/external/external/imgui_test_engine/imgui_test_engine/imgui_test_suite/thirdparty/implot
+    url: https://github.com/epezent/implot/archive/419a8a0f5fcb77e1e7c19ab540441686bfe21bca.tar.gz
+    sha256: 83dd02bfc5b78a48d3fddbcb906b305238c41773371d111f18188a5310215d54
+  - folder: bundle/external/external/ImCoolBar/ImCoolBar
+    url: https://github.com/pthom/ImCoolBar/archive/ddb3f06bd67a2abe4f3ff4dae427ae66707c4bdc.tar.gz
+    sha256: 806c5aa1cf60ed86836863b8f36f4a7d4bfe9441dc2c8141ac070be30cb2c6dc
+  - folder: bundle/external/_example_integration
+    url: https://github.com/pthom/imgui_bundle_template/archive/de05bb8695b50f0141aa70f386adbc2918f46c0a.tar.gz
+    sha256: 62e7cbfe825db71cbbd9496b245a95c5dcf938c8e0077b92b6412d3b7a2c3033
+  - folder: bundle/external/external/nanovg/nanovg
+    url: https://github.com/pthom/nanovg/archive/6f970a9e85027f510d3443624982ad6ba1a1dc3d.tar.gz
+    sha256: 16485a28224f52d9a9ff233f575c97aaa078ac201283bd10d529111c4c594340
+  - folder: bundle/external/external/nanovg/MetalNanoVG
+    url: https://github.com/ollix/MetalNanoVG/archive/58670cd64715e99b00c2fbddb6ace2264873ce91.tar.gz
+    sha256: d7f3ee3496cb604d974121116dc5ae9919365bcbd5a5794ce976ab6e83e1c596
+  - folder: bundle/external/external/immvision/cvnp_nano
+    url: https://github.com/pthom/cvnp_nano/archive/cb84c1e756f07ed769987cacac53a094e687d010.tar.gz
+    sha256: 73deef3415edd92828c248726edcb238b15569ab5b8475a265a389b570bd5c8e
 
 build:
-  number: 0
+  number: 1
   # hmaarrfk -- Version 1.5.2 -- Nov 30, 2024
   # windows runs out of memory on our CIs....
   # One would think that nanobind would help reduce the memory requirements of pybind
@@ -58,9 +141,10 @@ requirements:
     - cmake
     # - glad2-cmake
     - ninja
+    # Helps find plutovg, and plutosvg
+    - pkg-config
     # CMake will complain if it can't find make
     - make                                   # [unix]
-    - pkg-config                             # [unix]
     - python                                 # [build_platform != target_platform]
     - cross-python_{{ target_platform }}     # [build_platform != target_platform]
     - nanobind                               # [build_platform != target_platform]
@@ -72,6 +156,7 @@ requirements:
     - nanobind
     - scikit-build-core
     - glfw
+    - freetype
     # Avoid downloading Qt (a dependency of opencv) for the CI
     # But it doesn't exist for Windows (yet)
     - libopencv *=headless*   # [not win]
