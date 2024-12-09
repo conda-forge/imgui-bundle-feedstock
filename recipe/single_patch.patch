@@ -159,7 +159,7 @@ index e66494c..393e029 100644
  endif()
 Submodule external/hello_imgui/hello_imgui contains modified content
 diff --git a/external/hello_imgui/hello_imgui/hello_imgui_cmake/hello_imgui_build_lib.cmake b/external/hello_imgui/hello_imgui/hello_imgui_cmake/hello_imgui_build_lib.cmake
-index 923da1b..d5df60b 100644
+index 923da1b..71efe34 100644
 --- a/external/hello_imgui/hello_imgui/hello_imgui_cmake/hello_imgui_build_lib.cmake
 +++ b/external/hello_imgui/hello_imgui/hello_imgui_cmake/hello_imgui_build_lib.cmake
 @@ -245,9 +245,9 @@ function(him_add_hello_imgui)
@@ -174,7 +174,7 @@ index 923da1b..d5df60b 100644
      endif()
  
      add_library(hello-imgui::hello_imgui ALIAS hello_imgui)
-@@ -279,12 +279,12 @@ function(him_build_imgui)
+@@ -279,12 +279,35 @@ function(him_build_imgui)
              _him_checkout_imgui_submodule_if_needed()
              _him_do_build_imgui()
          endif()
@@ -183,17 +183,39 @@ index 923da1b..d5df60b 100644
 -            if (HELLOIMGUI_USE_FREETYPE_PLUTOSVG)
 -                _him_add_freetype_plutosvg_to_imgui()
 -            endif()
--        endif()
-+        find_library(PLUTOVG_LIBRARIES plutovg REQUIRED)
-+        target_link_libraries(imgui PRIVATE ${PLUTOVG_LIBRARIES})
++        if (WIN32)
++            # Using pkgconfig on windows just didn't work.
++            # Provide the full directories, hardcode this.
++            link_directories(imgui $ENV{LIBRARY_LIB})
++            target_link_libraries(imgui PUBLIC $ENV{LIBRARY_LIB}/plutovg.lib)
++            target_link_libraries(imgui PUBLIC $ENV{LIBRARY_LIB}/plutosvg.lib)
++            target_include_directories(imgui PRIVATE $ENV{LIBRARY_INC}/plutovg)
++            target_include_directories(imgui PRIVATE $ENV{LIBRARY_INC}/plutosvg)
++        else()
++            find_package(PkgConfig)
++            # Add the plutosvg include directory from the prefix
++            pkg_search_module(PLUTOVG REQUIRED plutovg)
++            target_link_libraries(imgui PRIVATE ${PLUTOVG_LIBRARIES})
++            target_include_directories(imgui PRIVATE ${PLUTOVG_INCLUDE_DIRS})
 +
-+        find_library(PLUTOSVG_LIBRARIES plutovg REQUIRED)
-+        target_link_libraries(imgui PRIVATE ${PLUTOSVG_LIBRARIES})
++            pkg_search_module(PLUTOSVG REQUIRED plutosvg)
++            target_link_libraries(imgui PRIVATE ${PLUTOSVG_LIBRARIES})
++            target_include_directories(imgui PRIVATE ${PLUTOSVG_INCLUDE_DIRS})
+         endif()
++
++        find_package(Freetype REQUIRED)
++        target_link_libraries(imgui PRIVATE Freetype::Freetype)
++        target_compile_definitions(imgui PUBLIC IMGUI_ENABLE_FREETYPE)
 +        target_compile_definitions(imgui PUBLIC IMGUI_ENABLE_FREETYPE_PLUTOSVG)
++            # 3. Add support for wchar32 (for emojis, and other unicode characters)
++        target_sources(imgui PRIVATE
++            ${HELLOIMGUI_IMGUI_SOURCE_DIR}/misc/freetype/imgui_freetype.cpp
++            ${HELLOIMGUI_IMGUI_SOURCE_DIR}/misc/freetype/imgui_freetype.h)
++        target_compile_definitions(imgui PUBLIC IMGUI_USE_WCHAR32)
      endif()
  endfunction()
  
-@@ -294,7 +294,7 @@ function(him_install_imgui)
+@@ -294,7 +317,7 @@ function(him_install_imgui)
              return()
          endif()
  
@@ -202,7 +224,7 @@ index 923da1b..d5df60b 100644
          file(GLOB imgui_headers
              ${HELLOIMGUI_IMGUI_SOURCE_DIR}/*.h
              ${HELLOIMGUI_IMGUI_SOURCE_DIR}/misc/cpp/*.h
-@@ -433,7 +433,7 @@ function(_him_add_freetype_to_imgui)
+@@ -433,7 +456,7 @@ function(_him_add_freetype_to_imgui)
      endif()
  
      # 2. Add freetype to imgui
@@ -211,7 +233,7 @@ index 923da1b..d5df60b 100644
      target_compile_definitions(imgui PUBLIC IMGUI_ENABLE_FREETYPE)
  
      # 3. Add support for wchar32 (for emojis, and other unicode characters)
-@@ -454,46 +454,8 @@ endfunction()
+@@ -454,46 +477,8 @@ endfunction()
  
  
  function(_him_add_freetype_plutosvg_to_imgui)
@@ -260,7 +282,7 @@ index 923da1b..d5df60b 100644
      target_compile_definitions(imgui PUBLIC IMGUI_ENABLE_FREETYPE_PLUTOSVG)
  
      set(BUILD_SHARED_LIBS ${backup_build_shared_libs})
-@@ -637,13 +599,13 @@ endfunction()
+@@ -637,13 +622,13 @@ endfunction()
  
  function(_him_link_apple_frameworks)
      if (IOS)
@@ -277,7 +299,7 @@ index 923da1b..d5df60b 100644
      endif()
  endfunction()
  
-@@ -669,8 +631,8 @@ endfunction()
+@@ -669,8 +654,8 @@ endfunction()
  ###################################################################################################
  function(him_add_linux_options)
      if (UNIX AND NOT EMSCRIPTEN  AND NOT APPLE AND NOT ANDROID)
@@ -288,7 +310,7 @@ index 923da1b..d5df60b 100644
      endif()
  endfunction()
  
-@@ -727,7 +689,7 @@ function(him_add_emscripten_options)
+@@ -727,7 +712,7 @@ function(him_add_emscripten_options)
      if (EMSCRIPTEN)
          target_compile_definitions(${HELLOIMGUI_TARGET} PUBLIC HELLOIMGUI_USE_GLES3)
          target_compile_definitions(${HELLOIMGUI_TARGET} PUBLIC HELLOIMGUI_CANNOTQUIT)
@@ -297,7 +319,7 @@ index 923da1b..d5df60b 100644
      endif()
  endfunction()
  
-@@ -771,9 +733,9 @@ endfunction()
+@@ -771,9 +756,9 @@ endfunction()
  
  function(_him_link_opengl_es_sdl target)
      if(IOS)
@@ -309,7 +331,7 @@ index 923da1b..d5df60b 100644
      endif()
  
      target_compile_definitions(${target}
-@@ -789,40 +751,30 @@ function(_him_add_glad)
+@@ -789,40 +774,30 @@ function(_him_add_glad)
          return()
      endif()
  
@@ -360,7 +382,7 @@ index 923da1b..d5df60b 100644
          install(FILES ${glad_dir}/include/glad/glad.h DESTINATION include/glad)
          install(FILES ${glad_dir}/include/KHR/khrplatform.h DESTINATION include/KHR)
      endif()
-@@ -842,7 +794,7 @@ function(him_has_metal target)
+@@ -842,7 +817,7 @@ function(him_has_metal target)
      endif()
      target_compile_definitions(${HELLOIMGUI_TARGET} PUBLIC HELLOIMGUI_HAS_METAL)
      set(HELLOIMGUI_HAS_METAL ON CACHE BOOL "" FORCE)
@@ -369,7 +391,7 @@ index 923da1b..d5df60b 100644
          "-framework Metal -framework MetalKit -framework QuartzCore")
  endfunction()
  
-@@ -860,7 +812,7 @@ function(him_has_vulkan target)
+@@ -860,7 +835,7 @@ function(him_has_vulkan target)
      target_compile_definitions(${HELLOIMGUI_TARGET} PUBLIC HELLOIMGUI_HAS_VULKAN)
      set(HELLOIMGUI_HAS_VULKAN ON CACHE BOOL "" FORCE)
      find_package(Vulkan REQUIRED)
@@ -378,7 +400,7 @@ index 923da1b..d5df60b 100644
  endfunction()
  
  
-@@ -876,7 +828,7 @@ function(him_has_directx11 target)
+@@ -876,7 +851,7 @@ function(him_has_directx11 target)
      endif()
      target_compile_definitions(${HELLOIMGUI_TARGET} PUBLIC HELLOIMGUI_HAS_DIRECTX11)
      set(HELLOIMGUI_HAS_DIRECTX11 ON CACHE BOOL "" FORCE)
@@ -387,7 +409,7 @@ index 923da1b..d5df60b 100644
  endfunction()
  
  
-@@ -892,7 +844,7 @@ function(him_has_directx12 target)
+@@ -892,7 +867,7 @@ function(him_has_directx12 target)
      endif()
      target_compile_definitions(${HELLOIMGUI_TARGET} PUBLIC HELLOIMGUI_HAS_DIRECTX12)
      set(HELLOIMGUI_HAS_DIRECTX12 ON CACHE BOOL "" FORCE)
@@ -396,7 +418,7 @@ index 923da1b..d5df60b 100644
  endfunction()
  
  
-@@ -987,21 +939,21 @@ function(_him_link_sdl target)
+@@ -987,21 +962,21 @@ function(_him_link_sdl target)
      endif()
  
      if(IOS)
@@ -423,7 +445,7 @@ index 923da1b..d5df60b 100644
      endif()
  endfunction()
  
-@@ -1014,7 +966,7 @@ function(him_use_glfw3_backend target)
+@@ -1014,7 +989,7 @@ function(him_use_glfw3_backend target)
      if (NOT TARGET glfw) # if glfw is not built as part of the whole build, find it
          find_package(glfw3 CONFIG REQUIRED)
      endif()
@@ -432,7 +454,7 @@ index 923da1b..d5df60b 100644
  
      # vcpkg will have added those files to imgui
      if (NOT HELLOIMGUI_USE_IMGUI_CMAKE_PACKAGE)
-@@ -1093,7 +1045,7 @@ function(him_with_netimgui)
+@@ -1093,7 +1068,7 @@ function(him_with_netimgui)
      set(NETIMGUI_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
      add_subdirectory(${NETIMGUI_DIR}  netimgui)
  
@@ -441,7 +463,7 @@ index 923da1b..d5df60b 100644
      him_add_installable_dependency(net_imgui_client)
  endfunction()
  
-@@ -1109,7 +1061,7 @@ function(him_with_imguiws)
+@@ -1109,7 +1084,7 @@ function(him_with_imguiws)
      set(IMGUIWS_DIR ${HELLOIMGUI_BASEPATH}/external/imgui-ws CACHE STRING "" FORCE)
      add_subdirectory(${IMGUIWS_DIR} imgui-ws)
      target_include_directories(imgui-ws PRIVATE $<BUILD_INTERFACE:${HELLOIMGUI_IMGUI_SOURCE_DIR}/..>)
@@ -450,7 +472,7 @@ index 923da1b..d5df60b 100644
      target_compile_definitions(imgui PUBLIC "ImDrawIdx=unsigned int")
      set(HELLOIMGUI_INSTALL OFF CACHE BOOL "" FORCE)  # imgui-ws is not installable
  endfunction()
-@@ -1158,7 +1110,7 @@ function(him_add_nlohmann_json)
+@@ -1158,7 +1133,7 @@ function(him_add_nlohmann_json)
      find_package(nlohmann_json CONFIG QUIET)
      if(nlohmann_json_FOUND)
          message(STATUS "HelloImGui: using nlohmann_json from find_package(nlohmann_json)")
@@ -459,7 +481,7 @@ index 923da1b..d5df60b 100644
          set(HELLOIMGUI_NLOHMANN_JSON_SELECTED_INFO "Found via find_package(nlohmann_json)" CACHE INTERNAL "" FORCE)
      else()
          message(STATUS "HelloImGui: using nlohmann_json from external/nlohmann_json")
-@@ -1166,7 +1118,7 @@ function(him_add_nlohmann_json)
+@@ -1166,7 +1141,7 @@ function(him_add_nlohmann_json)
          add_library(nlohmann_json INTERFACE)
          target_include_directories(nlohmann_json INTERFACE $<BUILD_INTERFACE:${nlohmann_json_dir}>)
          # target_compile_definitions(nlohmann_json INTERFACE NLOHMANN_JSON_NOEXCEPTION)
@@ -645,7 +667,7 @@ index f6f08bb0..e5f9f842 100644
  
          if(IMGUI_BUNDLE_BUILD_PYTHON)
 diff --git a/imgui_bundle_cmake/internal/add_imgui_bundle_bindings.cmake b/imgui_bundle_cmake/internal/add_imgui_bundle_bindings.cmake
-index 312e2bf4..c6c86c75 100644
+index 312e2bf4..0010aad2 100644
 --- a/imgui_bundle_cmake/internal/add_imgui_bundle_bindings.cmake
 +++ b/imgui_bundle_cmake/internal/add_imgui_bundle_bindings.cmake
 @@ -1,15 +1,3 @@
@@ -682,7 +704,7 @@ index 312e2bf4..c6c86c75 100644
  
      # add cvnp for immvision
      if (IMGUI_BUNDLE_WITH_IMMVISION)
-@@ -70,23 +59,18 @@ function(add_imgui_bundle_bindings)
+@@ -70,23 +59,20 @@ function(add_imgui_bundle_bindings)
          target_compile_definitions(${python_native_module_name} PUBLIC IMGUI_BUNDLE_WITH_IMMVISION)
      endif()
  
@@ -708,6 +730,8 @@ index 312e2bf4..c6c86c75 100644
 +    target_link_libraries(${python_native_module_name} PRIVATE ${bound_library})
 +    find_package(OpenCV REQUIRED)
 +    target_link_libraries(${python_native_module_name} PRIVATE ${OpenCV_LIBS})
++    find_library(FREETYPE_LIBRARIES freetype REQUIRED)
++    target_link_libraries(${python_native_module_name} PRIVATE ${FREETYPE_LIBRARIES})
 +
 +    litgen_setup_module(${bound_library} ${python_native_module_name} ${python_wrapper_module_name} ${IMGUI_BUNDLE_PATH}/bindings)
  

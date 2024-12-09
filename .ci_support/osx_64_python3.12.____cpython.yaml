@@ -18,6 +18,8 @@ cxx_compiler:
 - clangxx
 cxx_compiler_version:
 - '18'
+freetype:
+- '2'
 libopencv:
 - 4.10.0
 macos_machine:
