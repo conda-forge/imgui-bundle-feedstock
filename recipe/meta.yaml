@@ -11,32 +11,9 @@ source:
     - 0001-Use-conda-forge-s-plutovg.patch
     - 0002-Find-glfw-correctly-for-conda-forge.patch
     - 0003-Remove-demo-depenedencies-to-slim-down-the-package.patch
-  # patches:
-  #   - 0001-Do-not-force-GLFW-to-be-recompiled.patch
-  #   - 0002-Do-not-force-static-freetype.patch
-  #   # https://github.com/pthom/imgui_bundle/pull/284
-  #   - 0003-Do-not-force-linking-to-non-existent-nlohmann_json-s.patch
-  #   - 0005-Find-glfw-correctly-for-conda-forge.patch
-  #   - 0006-Enable-shared-libraries-for-conda-forge.patch
-  #   - 0007-Remove-optional-dependencies-to-slim-package.patch
-  #   - 0008-Adjust-compilation-of-immapp.patch
-  #   - single_patch.patch
-  #   # Adapted from
-  #   # https://github.com/pthom/immvision/commit/733334da4ab43d9efd54ef1df0344cce39fc4625
-  #   - drop_float16.patch
 
 build:
   number: 0
-  # hmaarrfk -- Version 1.5.2 -- Nov 30, 2024
-  # windows runs out of memory on our CIs....
-  # One would think that nanobind would help reduce the memory requirements of pybind
-  # https://github.com/pthom/imgui_bundle/pull/266
-  # But...
-  # https://github.com/pthom/imgui_bundle/pull/266#issuecomment-2489688337
-  # https://github.com/wjakob/nanobind/discussions/791
-  # lets revisit when we have a feedstock by adding a pagefile:
-  # https://github.com/conda-forge/onnxruntime-feedstock/blob/main/conda-forge.yml#L9
-  # skip: true  # [win]
   skip: true  # [py<310]
   entry_points:
     - demo_imgui_bundle = imgui_bundle.demos_python.demo_imgui_bundle:main
