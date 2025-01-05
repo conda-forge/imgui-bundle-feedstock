@@ -1,7 +1,7 @@
 From 9ceff181762fb3280a17af445d08e8ec49928c6d Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Sat, 4 Jan 2025 23:58:31 -0500
-Subject: [PATCH 2/2] Find glfw correctly for conda-forge
+Subject: [PATCH 2/3] Find glfw correctly for conda-forge
 
 ---
  bindings/imgui_bundle/__init__.py | 9 ---------

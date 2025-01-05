@@ -10,6 +10,7 @@ source:
   patches:
     - 0001-Use-conda-forge-s-plutovg.patch
     - 0002-Find-glfw-correctly-for-conda-forge.patch
+    - 0003-Remove-demo-depenedencies-to-slim-down-the-package.patch
   # patches:
   #   - 0001-Do-not-force-GLFW-to-be-recompiled.patch
   #   - 0002-Do-not-force-static-freetype.patch
