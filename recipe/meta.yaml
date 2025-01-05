@@ -9,6 +9,7 @@ source:
   sha256: 74d7984f59d9349685dfab4190609af9fab956635522211280cf087f4f2be85f
   patches:
     - 0001-Use-conda-forge-s-plutovg.patch
+    - 0002-Find-glfw-correctly-for-conda-forge.patch
   # patches:
   #   - 0001-Do-not-force-GLFW-to-be-recompiled.patch
   #   - 0002-Do-not-force-static-freetype.patch

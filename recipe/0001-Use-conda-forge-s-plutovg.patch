@@ -1,7 +1,7 @@
 From eb38e0d4ef39459554d112270fd8d2a73ad2d743 Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
 Date: Sat, 4 Jan 2025 23:41:53 -0500
-Subject: [PATCH] Use conda-forge's plutovg
+Subject: [PATCH 1/2] Use conda-forge's plutovg
 
 ---
  .../hello_imgui_build_lib.cmake               | 23 +++++++++++++++----
