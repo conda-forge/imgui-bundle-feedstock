@@ -29,7 +29,7 @@ pin_run_as_build:
 plutosvg:
 - 0.0.4
 plutovg:
-- 0.0.10
+- 0.0.11
 python:
 - 3.13.* *_cp313
 target_platform:
