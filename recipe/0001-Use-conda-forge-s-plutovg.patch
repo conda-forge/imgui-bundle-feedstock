@@ -1,17 +1,8 @@
-From eb38e0d4ef39459554d112270fd8d2a73ad2d743 Mon Sep 17 00:00:00 2001
-From: Mark Harfouche <mark.harfouche@gmail.com>
-Date: Sat, 4 Jan 2025 23:41:53 -0500
-Subject: [PATCH 1/3] Use conda-forge's plutovg
-
----
- .../hello_imgui_build_lib.cmake               | 23 +++++++++++++++----
- 1 file changed, 18 insertions(+), 5 deletions(-)
-
 diff --git a/external/hello_imgui/hello_imgui/hello_imgui_cmake/hello_imgui_build_lib.cmake b/external/hello_imgui/hello_imgui/hello_imgui_cmake/hello_imgui_build_lib.cmake
-index 987e64f..9a28b19 100644
+index 987e64f..a303849 100644
 --- a/external/hello_imgui/hello_imgui/hello_imgui_cmake/hello_imgui_build_lib.cmake
 +++ b/external/hello_imgui/hello_imgui/hello_imgui_cmake/hello_imgui_build_lib.cmake
-@@ -279,11 +279,24 @@ function(him_build_imgui)
+@@ -279,12 +279,35 @@ function(him_build_imgui)
              _him_checkout_imgui_submodule_if_needed()
              _him_do_build_imgui()
          endif()
@@ -39,8 +30,76 @@ index 987e64f..9a28b19 100644
 +            target_link_libraries(imgui PRIVATE ${PLUTOSVG_LIBRARIES})
 +            target_include_directories(imgui PRIVATE ${PLUTOSVG_INCLUDE_DIRS})
          endif()
++
++        find_package(Freetype REQUIRED)
++        target_link_libraries(imgui PRIVATE Freetype::Freetype)
++        target_compile_definitions(imgui PUBLIC IMGUI_ENABLE_FREETYPE)
++        target_compile_definitions(imgui PUBLIC IMGUI_ENABLE_FREETYPE_PLUTOSVG)
++            # 3. Add support for wchar32 (for emojis, and other unicode characters)
++        target_sources(imgui PRIVATE
++            ${HELLOIMGUI_IMGUI_SOURCE_DIR}/misc/freetype/imgui_freetype.cpp
++            ${HELLOIMGUI_IMGUI_SOURCE_DIR}/misc/freetype/imgui_freetype.h)
++        target_compile_definitions(imgui PUBLIC IMGUI_USE_WCHAR32)
      endif()
  endfunction()
--- 
-2.47.1
-
+ 
+@@ -294,7 +317,7 @@ function(him_install_imgui)
+             return()
+         endif()
+ 
+-        install(TARGETS imgui DESTINATION ./lib/)
++        install(TARGETS imgui DESTINATION lib)
+         file(GLOB imgui_headers
+             ${HELLOIMGUI_IMGUI_SOURCE_DIR}/*.h
+             ${HELLOIMGUI_IMGUI_SOURCE_DIR}/misc/cpp/*.h
+@@ -433,7 +456,7 @@ function(_him_add_freetype_to_imgui)
+     endif()
+ 
+     # 2. Add freetype to imgui
+-    target_link_libraries(imgui PUBLIC ${HIM_FREETYPE_LINKED_LIBRARY})
++    target_link_libraries(imgui PRIVATE ${HIM_FREETYPE_LINKED_LIBRARY})
+     target_compile_definitions(imgui PUBLIC IMGUI_ENABLE_FREETYPE)
+ 
+     # 3. Add support for wchar32 (for emojis, and other unicode characters)
+diff --git a/imgui_bundle_cmake/internal/add_imgui_bundle_bindings.cmake b/imgui_bundle_cmake/internal/add_imgui_bundle_bindings.cmake
+index 3dde3f5..45c7d4c 100644
+--- a/imgui_bundle_cmake/internal/add_imgui_bundle_bindings.cmake
++++ b/imgui_bundle_cmake/internal/add_imgui_bundle_bindings.cmake
+@@ -61,8 +61,6 @@ function(add_imgui_bundle_bindings)
+     nanobind_add_module(${python_native_module_name} ${python_module_sources})
+     target_compile_definitions(${python_native_module_name} PRIVATE VERSION_INFO=${PROJECT_VERSION})
+ 
+-    litgen_setup_module(${bound_library} ${python_native_module_name} ${python_wrapper_module_name} ${IMGUI_BUNDLE_PATH}/bindings)
+-
+     # add cvnp for immvision
+     if (IMGUI_BUNDLE_WITH_IMMVISION)
+         set(cvnp_nano_dir ${IMGUI_BUNDLE_PATH}/external/immvision/cvnp_nano)
+@@ -72,18 +70,22 @@ function(add_imgui_bundle_bindings)
+         target_compile_definitions(${python_native_module_name} PUBLIC IMGUI_BUNDLE_WITH_IMMVISION)
+     endif()
+ 
+-    if(IMGUI_BUNDLE_BUILD_PYTHON)
+-        # if using shared libraries, we need to set the rpath,
+-        # so that dll/dylibs can be found in the same folder as imgui_bundle python lib.
+-        _target_set_rpath(${python_native_module_name} ".")
+-    endif()
+-
+     if (IMGUI_BUNDLE_BUILD_PYODIDE)
+         ibd_pyodide_manually_link_sdl_to_bindings()
+     endif()
+ 
++    find_package(OpenGL REQUIRED)
++    target_link_libraries(${python_native_module_name} PRIVATE OpenGL::GL)
++
+     target_link_libraries(${python_native_module_name} PUBLIC ${bound_library})
+ 
++    find_package(OpenCV REQUIRED)
++    target_link_libraries(${python_native_module_name} PRIVATE ${OpenCV_LIBS})
++    find_library(FREETYPE_LIBRARIES freetype REQUIRED)
++    target_link_libraries(${python_native_module_name} PRIVATE ${FREETYPE_LIBRARIES})
++
++    litgen_setup_module(${bound_library} ${python_native_module_name} ${python_wrapper_module_name} ${IMGUI_BUNDLE_PATH}/bindings)
++
+     # Link with OpenGL (necessary for nanobind)
+     if (NOT  EMSCRIPTEN)
+         find_package(OpenGL REQUIRED)
