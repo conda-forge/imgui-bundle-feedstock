@@ -1,17 +1,17 @@
-From eb38e0d4ef39459554d112270fd8d2a73ad2d743 Mon Sep 17 00:00:00 2001
+From 7c1f5413fdb645a9c955bb2c3ec157ab5eb68aed Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
-Date: Sat, 4 Jan 2025 23:41:53 -0500
-Subject: [PATCH 1/3] Use conda-forge's plutovg
+Date: Sun, 12 Jan 2025 10:07:15 -0500
+Subject: [PATCH] Use conda-forge's plutovg
 
 ---
- .../hello_imgui_build_lib.cmake               | 23 +++++++++++++++----
- 1 file changed, 18 insertions(+), 5 deletions(-)
+ .../hello_imgui_build_lib.cmake               | 26 +++++++++++++++----
+ 1 file changed, 21 insertions(+), 5 deletions(-)
 
 diff --git a/external/hello_imgui/hello_imgui/hello_imgui_cmake/hello_imgui_build_lib.cmake b/external/hello_imgui/hello_imgui/hello_imgui_cmake/hello_imgui_build_lib.cmake
-index 987e64f..9a28b19 100644
+index 987e64f..31f3d15 100644
 --- a/external/hello_imgui/hello_imgui/hello_imgui_cmake/hello_imgui_build_lib.cmake
 +++ b/external/hello_imgui/hello_imgui/hello_imgui_cmake/hello_imgui_build_lib.cmake
-@@ -279,11 +279,24 @@ function(him_build_imgui)
+@@ -279,12 +279,28 @@ function(him_build_imgui)
              _him_checkout_imgui_submodule_if_needed()
              _him_do_build_imgui()
          endif()
@@ -39,8 +39,12 @@ index 987e64f..9a28b19 100644
 +            target_link_libraries(imgui PRIVATE ${PLUTOSVG_LIBRARIES})
 +            target_include_directories(imgui PRIVATE ${PLUTOSVG_INCLUDE_DIRS})
          endif()
++        target_compile_definitions(imgui PUBLIC IMGUI_ENABLE_FREETYPE)
++        target_compile_definitions(imgui PUBLIC IMGUI_USE_WCHAR32)
++        target_compile_definitions(imgui PUBLIC IMGUI_ENABLE_FREETYPE_PLUTOSVG)
      endif()
  endfunction()
+ 
 -- 
 2.47.1
 
