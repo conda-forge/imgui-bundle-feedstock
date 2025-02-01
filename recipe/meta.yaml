@@ -11,6 +11,8 @@ source:
     - 0001-Use-conda-forge-s-plutovg.patch
     - 0002-Find-glfw-correctly-for-conda-forge.patch
     - 0003-Remove-demo-depenedencies-to-slim-down-the-package.patch
+    # https://github.com/pthom/immvision/pull/10
+    - 0004-Update-immvision-for-OpenCV-4.11.patch
 
 build:
   number: 3
