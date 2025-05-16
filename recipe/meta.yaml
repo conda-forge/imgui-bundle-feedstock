@@ -15,7 +15,7 @@ source:
     - 0004-Update-immvision-for-OpenCV-4.11.patch
 
 build:
-  number: 7
+  number: 8
   skip: true  # [py<310]
   entry_points:
     - demo_imgui_bundle = imgui_bundle.demos_python.demo_imgui_bundle:main
