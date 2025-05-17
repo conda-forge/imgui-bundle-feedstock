@@ -8,7 +8,6 @@ azure:
   settings_win:
     variables:
       SET_PAGEFILE: 'True'
-      CONDA_BLD_PATH: C:\\bld\\
 conda_build:
   error_overlinking: true
 conda_forge_output_validation: true
