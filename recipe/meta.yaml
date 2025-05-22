@@ -76,6 +76,7 @@ requirements:
     - typing_extensions
     - numpy
     - pydantic
+    - munch
 
     # ----------------- Optional dependencies -----------------
     # Only needed for a demo, not worth having as a hard dependency
