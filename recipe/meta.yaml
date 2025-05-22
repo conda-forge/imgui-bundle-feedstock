@@ -1,4 +1,4 @@
-{% set version = '1.6.2' %}
+{% set version = "1.6.3" %}
 
 package:
   name: imgui-bundle
@@ -6,7 +6,7 @@ package:
 
 source:
   url: https://github.com/pthom/imgui_bundle/releases/download/v{{ version }}/srcs-full-v{{ version }}.tar.gz
-  sha256: 74d7984f59d9349685dfab4190609af9fab956635522211280cf087f4f2be85f
+  sha256: 987328fa4edc64afad6b7856ba096c25b31495073b6577a67eceb337b36c79b5
   patches:
     - 0001-Use-conda-forge-s-plutovg.patch
     - 0002-Find-glfw-correctly-for-conda-forge.patch
@@ -15,7 +15,7 @@ source:
     - 0004-Update-immvision-for-OpenCV-4.11.patch
 
 build:
-  number: 8
+  number: 0
   skip: true  # [py<310]
   entry_points:
     - demo_imgui_bundle = imgui_bundle.demos_python.demo_imgui_bundle:main
