@@ -1,4 +1,4 @@
-{% set version = "1.92.0" %}
+{% set version = "1.92.4" %}
 
 package:
   name: imgui-bundle
@@ -6,14 +6,14 @@ package:
 
 source:
   url: https://github.com/pthom/imgui_bundle/releases/download/v{{ version }}/srcs-full-v{{ version }}.tar.gz
-  sha256: 359336ca8edeef3e1313652be86d4a3aacb28962f4906926ca0db3817c27fcdb
+  sha256: c53afb7fb410c12f9727ce504b61125d048f60aeb6ca0d50ccbb395c40ccd3c8
   patches:
     - 0001-Use-conda-forge-s-plutovg.patch
     - 0002-Find-glfw-correctly-for-conda-forge.patch
     - 0003-Remove-demo-depenedencies-to-slim-down-the-package.patch
 
 build:
-  number: 3
+  number: 0
   skip: true  # [py<310]
   entry_points:
     - demo_imgui_bundle = imgui_bundle.demos_python.demo_imgui_bundle:main
