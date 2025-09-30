@@ -64,6 +64,7 @@ requirements:
     - nlohmann_json
     - libgl-devel                        # [linux]
     - libglx-devel                       # [linux]
+    - xorg-libx11                        # [linux]
     # - libegl-devel                       # [linux]
     - plutovg
     - plutosvg
