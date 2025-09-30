@@ -1,0 +1,27 @@
+From a43dd3d4dee765993ed987b75fcd2833cee0a636 Mon Sep 17 00:00:00 2001
+From: Mark Harfouche <mark.harfouche@gmail.com>
+Date: Tue, 30 Sep 2025 07:27:09 -0400
+Subject: [PATCH 3/3] Remove demo dependencies to slim down the package
+
+---
+ pyproject.toml | 4 ----
+ 1 file changed, 4 deletions(-)
+
+diff --git a/pyproject.toml b/pyproject.toml
+index c953a09..efdeebf 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -29,10 +29,6 @@ classifiers = [
+ 
+ dependencies = [
+     "numpy",
+-    "munch",
+-    "glfw",
+-    "PyOpenGL",
+-    "pillow",
+ ]
+ 
+ [project.optional-dependencies]
+-- 
+2.51.0
+

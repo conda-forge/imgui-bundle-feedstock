@@ -1,17 +1,17 @@
-From 9ceff181762fb3280a17af445d08e8ec49928c6d Mon Sep 17 00:00:00 2001
+From ef641cae93901cf05a5351b69725fd6fbfba446b Mon Sep 17 00:00:00 2001
 From: Mark Harfouche <mark.harfouche@gmail.com>
-Date: Sat, 4 Jan 2025 23:58:31 -0500
-Subject: [PATCH 2/2] Find glfw correctly for conda-forge
+Date: Tue, 30 Sep 2025 07:26:17 -0400
+Subject: [PATCH 2/3] Find glfw correctly for conda-forge
 
 ---
  bindings/imgui_bundle/__init__.py | 9 ---------
  1 file changed, 9 deletions(-)
 
 diff --git a/bindings/imgui_bundle/__init__.py b/bindings/imgui_bundle/__init__.py
-index 46d97d6..ab31534 100644
+index 117f61b..96c3ac2 100644
 --- a/bindings/imgui_bundle/__init__.py
 +++ b/bindings/imgui_bundle/__init__.py
-@@ -138,15 +138,6 @@ if has_submodule("immvision"):
+@@ -150,15 +150,6 @@ if has_submodule("immvision"):
      __all__.extend(["imgui_fig"])
  
  
@@ -28,5 +28,5 @@ index 46d97d6..ab31534 100644
  # Pyodide: patch hello_imgui.run and immapp.run to work with Pyodide
  #
 -- 
-2.47.1
+2.51.0
 

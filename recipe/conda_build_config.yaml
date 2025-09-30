@@ -1,11 +1,6 @@
 # 10.15 is needed for std::filesystem::exists
 c_stdlib_version:           # [osx and x86_64]
   - '10.15'                 # [osx and x86_64]
+# Needed for compatibility with OpenCV???
 MACOSX_SDK_VERSION:         # [osx and x86_64]
-  - '10.15'                 # [osx and x86_64]
-
-# Must use for opencv https://github.com/conda-forge/opencv-feedstock/issues/471
-c_compiler:    # [win]
-- vs2022       # [win]
-cxx_compiler:  # [win]
-- vs2022       # [win]
+  - '12.3'                  # [osx and x86_64]
