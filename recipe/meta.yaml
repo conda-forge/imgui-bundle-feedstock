@@ -13,23 +13,25 @@ source:
     - 0003-Remove-demo-dependencies-to-slim-down-the-package.patch
 
 build:
-  number: 0
-  skip: true  # [py<310]
+  number: 1
   entry_points:
     - demo_imgui_bundle = imgui_bundle.demos_python.demo_imgui_bundle:main
     - imgui_bundle_demo = imgui_bundle.demos_python.demo_imgui_bundle:main
   ignore_run_exports_from:
     - zlib
   script:
-    - rm -rf external/glfw/          # [unix]
-    - del /s /q external\glfw\       # [win]
+    - rm -rf external/glfw/                            # [unix]
+    - rmdir /S /Q external\glfw\                       # [win]
     - export CMAKE_BUILD_PARALLEL_LEVEL=${CPU_COUNT}   # [unix]
     - set CMAKE_BUILD_PARALLEL_LEVEL=1                 # [win]
-    - {{ PYTHON }} -m pip install . -vvv   # [not linux]
+    - rm -rf external/imgui_test_engine                # [unix]
+    - rmdir /S /Q external\imgui_test_engine           # [win]
+    # IMGUI_TEST_ENGINE has a strange license, just don't build with it.
+    - {{ PYTHON }} -m pip install . -vvv --config-setting=cmake.args="-DHELLOIMGUI_WITH_TEST_ENGINE=OFF"  # [not linux]
     # Not sure why I need to specify -lGL so hard here....
     # It seems related to nanobind
     # ${external_dir}/imgui/bindings/pybind_imgui_backends.cpp
-    - CFLAGS="${CFLAGS} -lGL" {{ PYTHON }} -m pip install . -vvv   # [linux]
+    - CFLAGS="${CFLAGS} -lGL" {{ PYTHON }} -m pip install . -vvv --config-setting=cmake.args="-DHELLOIMGUI_WITH_TEST_ENGINE=OFF"  # [linux]
 
 requirements:
   build:
