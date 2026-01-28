@@ -13,7 +13,7 @@ source:
     - 0003-Remove-demo-dependencies-to-slim-down-the-package.patch
 
 build:
-  number: 2
+  number: 3
   entry_points:
     - demo_imgui_bundle = imgui_bundle.demos_python.demo_imgui_bundle:main
     - imgui_bundle_demo = imgui_bundle.demos_python.demo_imgui_bundle:main
