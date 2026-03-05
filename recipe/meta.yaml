@@ -10,7 +10,6 @@ source:
   patches:
     - 0001-Use-conda-forge-s-plutovg.patch
     - 0002-Find-glfw-correctly-for-conda-forge.patch
-    - 0003-Remove-demo-dependencies-to-slim-down-the-package.patch
 
 build:
   number: 0
