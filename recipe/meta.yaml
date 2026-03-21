@@ -58,10 +58,6 @@ requirements:
     - freetype
     # Required to find plutosvg
     - zlib
-    # Avoid downloading Qt (a dependency of opencv) for the CI
-    # But it doesn't exist for Windows (yet)
-    - libopencv *=headless*   # [not win]
-    - libopencv
     - nlohmann_json
     - libgl-devel                        # [linux]
     - libglx-devel                       # [linux]
