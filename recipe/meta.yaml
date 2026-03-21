@@ -1,4 +1,4 @@
-{% set version = "1.92.600" %}
+{% set version = "1.92.601" %}
 
 package:
   name: imgui-bundle
@@ -6,9 +6,9 @@ package:
 
 source:
   url: https://github.com/pthom/imgui_bundle/releases/download/v{{ version }}/srcs-full-v{{ version }}.tar.gz
-  sha256: 870a9465b749ebecf5226e5aeace95f3b0d0cadbac4646dc8ecfaa4770529cc2
+  sha256: 728e818e36fc90d2399b3be111f0066a829f89664cb75e3984cc73b5955fb538
   patches:
-    - 0001-Use-conda-forge-s-plutovg.patch
+    - 0001-Use-system-libraries-for-plutovg-and-freetype.patch
     - 0002-Find-glfw-correctly-for-conda-forge.patch
 
 build:
@@ -58,10 +58,6 @@ requirements:
     - freetype
     # Required to find plutosvg
     - zlib
-    # Avoid downloading Qt (a dependency of opencv) for the CI
-    # But it doesn't exist for Windows (yet)
-    - libopencv *=headless*   # [not win]
-    - libopencv
     - nlohmann_json
     - libgl-devel                        # [linux]
     - libglx-devel                       # [linux]
