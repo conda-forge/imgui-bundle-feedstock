@@ -8,7 +8,7 @@ source:
   url: https://github.com/pthom/imgui_bundle/releases/download/v{{ version }}/srcs-full-v{{ version }}.tar.gz
   sha256: 728e818e36fc90d2399b3be111f0066a829f89664cb75e3984cc73b5955fb538
   patches:
-    - 0001-Use-conda-forge-s-plutovg.patch
+    - 0001-Use-system-libraries-for-plutovg-and-freetype.patch
     - 0002-Find-glfw-correctly-for-conda-forge.patch
 
 build:
