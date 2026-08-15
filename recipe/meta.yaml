@@ -1,4 +1,4 @@
-{% set version = "1.92.801" %}
+{% set version = "1.92.900" %}
 
 package:
   name: imgui-bundle
@@ -6,13 +6,13 @@ package:
 
 source:
   url: https://github.com/pthom/imgui_bundle/releases/download/v{{ version }}/srcs-full-v{{ version }}.tar.gz
-  sha256: 284d63b0ca07c68cfcc6b2c6f9b5ce8458203c5f452a16c85d487e1a05d4c99d
+  sha256: 48693211298f4e4287520fcf865635c48618f03ae17766a80bf2a2275104aa18
   patches:
     - 0001-Use-system-libraries-for-plutovg-and-freetype.patch
     - 0002-Find-glfw-correctly-for-conda-forge.patch
 
 build:
-  number: 2
+  number: 0
   entry_points:
     - demo_imgui_bundle = imgui_bundle.demos_python.demo_imgui_bundle:main
     - imgui_bundle_demo = imgui_bundle.demos_python.demo_imgui_bundle:main
