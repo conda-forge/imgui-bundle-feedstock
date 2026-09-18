@@ -1,0 +1,85 @@
+From cc9da4a268c1cfbfab6f5f70417f764be8a6bbf4 Mon Sep 17 00:00:00 2001
+From: Pascal Thomet <pthomet@gmail.com>
+Date: Thu, 3 Sep 2026 18:30:46 +0200
+Subject: [PATCH 3/3] Fix build with nanobind 3: export ndarrays via public
+ type_caster
+
+Backport of the upstream fix:
+https://github.com/pthom/imgui_bundle/commit/cc9da4a268c1cfbfab6f5f70417f764be8a6bbf4
+
+nanobind 3.0 changed the signature of nb::detail::ndarray_export (it now
+takes a leading nb_internals* argument), which broke the three hand-written
+ndarray exports (ImGuiNpBuffer, FinalAppWindowScreenshot, ImmVision::ImageBuffer).
+Use type_caster<ndarray<..., numpy>>::from_cpp instead, which is identical
+in nanobind 2.x and 3.x.
+
+This can be dropped once a release newer than v1.92.900 is packaged.
+---
+diff --git a/external/hello_imgui/bindings/pybind_hello_imgui.cpp b/external/hello_imgui/bindings/pybind_hello_imgui.cpp
+index 25da3704..a6f71dcb 100644
+--- a/external/hello_imgui/bindings/pybind_hello_imgui.cpp
++++ b/external/hello_imgui/bindings/pybind_hello_imgui.cpp
+@@ -60,7 +60,7 @@ nb::handle FinalAppWindowScreenshot()
+         delete[] static_cast<uint8_t*>(p);
+     });
+ 
+-    auto array = nb::ndarray<uint8_t>(
++    auto array = nb::ndarray<uint8_t, nb::numpy>(
+         ndarray_buffer,                                      // Data pointer
+         {imageBuffer.height, imageBuffer.width, (size_t)3},  // Shape
+         owner,                                               // Owner capsule
+@@ -71,10 +71,9 @@ nb::handle FinalAppWindowScreenshot()
+         'C'                                                // Order ('C' for C-contiguous)
+     );
+ 
+-    // Properly export the ndarray
+-    return nb::detail::ndarray_export(
+-        array.handle(),
+-        nb::numpy::value,
++    // Export via the public ndarray caster (nb::detail::ndarray_export changed signature in nanobind 3)
++    return nb::detail::type_caster<nb::ndarray<uint8_t, nb::numpy>>::from_cpp(
++        array,
+         nb::rv_policy::move,  // Transfer ownership to Python
+         nullptr               // No cleanup list
+     );
+diff --git a/external/imgui/bindings/pybind_imgui.cpp b/external/imgui/bindings/pybind_imgui.cpp
+index a78acc30..3f9c108e 100644
+--- a/external/imgui/bindings/pybind_imgui.cpp
++++ b/external/imgui/bindings/pybind_imgui.cpp
+@@ -57,7 +57,7 @@ struct type_caster<ImGuiNpBuffer> {
+ 
+             nb::handle no_owner = {};
+ 
+-            nb::ndarray<uint8_t> array = nb::ndarray<uint8_t>(
++            nb::ndarray<uint8_t, nb::numpy> array(
+                 buf.Data,
+                 {(size_t)buf.Size},
+                 no_owner,  // no owner, as lifetime is managed on C++
+@@ -66,7 +66,8 @@ struct type_caster<ImGuiNpBuffer> {
+                 0, 0, 'C'
+             );
+ 
+-            return nb::detail::ndarray_export(array.handle(), nb::numpy::value, policy, cleanup);
++            // Export via the public ndarray caster (nb::detail::ndarray_export changed signature in nanobind 3)
++            return type_caster<nb::ndarray<uint8_t, nb::numpy>>::from_cpp(array, policy, cleanup);
+         }
+         catch (const std::exception& e) {
+             PyErr_WarnFormat(PyExc_Warning, 1, "ImGuiNpBuffer caster from_cpp exception: %s", e.what());
+diff --git a/external/immvision/bindings/casters/immvision_nb_type_casters.h b/external/immvision/bindings/casters/immvision_nb_type_casters.h
+index 8bcc5963..45c68067 100644
+--- a/external/immvision/bindings/casters/immvision_nb_type_casters.h
++++ b/external/immvision/bindings/casters/immvision_nb_type_casters.h
+@@ -166,10 +166,10 @@ struct type_caster<ImmVision::ImageBuffer>
+             nanobind::object owner = nanobind::capsule(heap_buf,
+                 [](void* p) noexcept { delete static_cast<ImmVision::ImageBuffer*>(p); });
+ 
+-            ndarray<> a(heap_buf->data, ndim, shape, owner, strides, dt);
++            ndarray<numpy> a(heap_buf->data, ndim, shape, owner, strides, dt);
+ 
+-            return ndarray_export(a.handle(), nanobind::numpy::value,
+-                                  rv_policy::reference, cleanup);
++            // Export via the public ndarray caster (ndarray_export changed signature in nanobind 3)
++            return type_caster<ndarray<numpy>>::from_cpp(a, rv_policy::reference, cleanup);
+         }
+         catch (...)
+         {
