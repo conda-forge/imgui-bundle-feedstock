@@ -10,9 +10,12 @@ source:
   patches:
     - 0001-Use-system-libraries-for-plutovg-and-freetype.patch
     - 0002-Find-glfw-correctly-for-conda-forge.patch
+    # nanobind 3.0 changed the signature of nb::detail::ndarray_export
+    # https://github.com/pthom/imgui_bundle/commit/cc9da4a268c1cfbfab6f5f70417f764be8a6bbf4
+    - 0003-Fix-build-with-nanobind-3.patch
 
 build:
-  number: 0
+  number: 1
   entry_points:
     - demo_imgui_bundle = imgui_bundle.demos_python.demo_imgui_bundle:main
     - imgui_bundle_demo = imgui_bundle.demos_python.demo_imgui_bundle:main

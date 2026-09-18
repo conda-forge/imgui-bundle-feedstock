@@ -2,15 +2,10 @@ azure:
   settings_osx:
     pool:
       vmImage: macos-14
-  settings_win:
-    variables:
-      SET_PAGEFILE: 'True'
 bot:
   automerge: true
 build_platform:
-  linux_aarch64: linux_64
   linux_ppc64le: linux_64
-  osx_arm64: osx_64
 conda_build:
   error_overlinking: true
 conda_forge_output_validation: true
@@ -18,6 +13,11 @@ github:
   branch_name: main
   tooling_branch_name: main
 provider:
-  linux_aarch64: azure
+  linux_aarch64: default
   linux_ppc64le: azure
+  osx_arm64: default
 test: native_and_emulated
+workflow_settings:
+  pagefile_size:
+  - os: win
+    value: 16
